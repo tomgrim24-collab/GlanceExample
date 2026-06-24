@@ -47,14 +47,34 @@ class StockAppWidget : GlanceAppWidget() {
     }
 
     @Composable
-    fun GlanceContent() {
-        Column(
-            modifier = GlanceModifier
-                .fillMaxSize()
-                .background(GlanceTheme.colors.background)
-                .padding(8.dp)
-        ) {
-            Text("Загрузка...")
+    private fun StockDisplay(stateCount: Float) {
+        val color = if (PriceDataRepo.change > 0) {
+            GlanceTheme.colors.primary
+        } else {
+            GlanceTheme.colors.error
         }
+
+        val textStyle = TextStyle(
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = color
+        )
+
+        Text(
+            text = PriceDataRepo.ticker,
+            style = TextStyle(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+        )
+
+        Text(
+            text = String.format(Locale.getDefault(), "%.2f", stateCount),
+            style = textStyle
+        )
+
+        Text(
+            text = "${PriceDataRepo.change} %",
+            style = textStyle
+        )
     }
-}
