@@ -13,9 +13,32 @@ import android.glance.layout.padding
 import android.glance.text.Text
 import android.glance.unit.dp
 import androidx.compose.runtime.Composable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class StockAppWidget : GlanceAppWidget() {
+
+
+    private var job: Job? = null
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+
+        job?.cancel()
+
+
+        job = CoroutineScope(Dispatchers.IO).launch {
+            while (true) {
+
+                PriceDataRepo.update()
+
+                delay(20000)
+            }
+        }
+
+
         provideContent {
             GlanceTheme {
                 GlanceContent()
@@ -31,7 +54,7 @@ class StockAppWidget : GlanceAppWidget() {
                 .background(GlanceTheme.colors.background)
                 .padding(8.dp)
         ) {
-            Text("Demo")
+            Text("Загрузка...")
         }
     }
 }
